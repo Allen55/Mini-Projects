@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TopicService {
@@ -28,8 +29,8 @@ public class TopicService {
         return topics;
     }
 
-    public Topic getTopic(String id){
-        return topics.stream().filter(t -> t.getId().toLowerCase().equals(id)).findFirst().get();
+    public Optional<Topic> getTopic(String id){
+        return topicRepository.findById(id);
     }
 
     public void addTopic(Topic topic) {
@@ -37,16 +38,10 @@ public class TopicService {
     }
 
     public void updateTopic(String id, Topic topic) {
-        for (int i = 0; i < topics.size(); i++){
-            Topic t = topics.get(i);
-            if(t.getId().equals(id)){
-                topics.set(i, topic);
-                return;
-            }
-        }
+        topicRepository.save(topic);  //  save can do both add and update. repository knows if there's arleady a row in the table with the id.
     }
 
     public void deleteTopic(String id) {
-        topics.removeIf(t -> t.getId().equals(id));
+        topicRepository.deleteById(id);
     }
 }
