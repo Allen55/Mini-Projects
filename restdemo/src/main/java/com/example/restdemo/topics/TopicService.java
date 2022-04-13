@@ -3,6 +3,7 @@ package com.example.restdemo.topics;
 // in Spring, business services are typically Singleton, when the application starts up Spring creates and instance of the service
 // and keeps it in the memory and keeps it in that instance.
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -12,6 +13,9 @@ import java.util.List;
 @Service
 public class TopicService {
 
+    @Autowired
+    private TopicRepository topicRepository;
+
     private List<Topic> topics = new ArrayList<>(Arrays.asList(
             new Topic("spring", "Spring Framework", "Spring framework description"),  // Calls constructor on the topic class to create
             new Topic("java", "Core Java", "Core Java description"),                  // a new topic object
@@ -19,6 +23,8 @@ public class TopicService {
     ));
 
     public List<Topic> getAllTopics() {
+        List<Topic> topics = new ArrayList();
+        topicRepository.findAll().forEach(topics::add);
         return topics;
     }
 
@@ -27,7 +33,7 @@ public class TopicService {
     }
 
     public void addTopic(Topic topic) {
-        topics.add(topic);
+        topicRepository.save(topic);
     }
 
     public void updateTopic(String id, Topic topic) {
